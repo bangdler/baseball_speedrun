@@ -5,8 +5,11 @@ interface State {
   game: BaseballGame;
 }
 
-interface Actions {}
+interface Actions {
+  setGame: (game: BaseballGame) => void;
+}
 
 export const sampleZustandStore = create<State & Actions>((set) => ({
-  game: new BaseballGame(),
+  game: new BaseballGame({}),
+  setGame: (game) => set({game}),
 }));
