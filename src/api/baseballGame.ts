@@ -1,6 +1,19 @@
+import { History } from "../domain/BaseballPlayer";
+
 const BASE_URL = "http://localhost:8080/games";
 
-class BaseballGameApi {
+export interface PlayerDto {
+  isWinner: boolean;
+  history: Omit<History, "id">[];
+}
+
+export interface BaseballGameDto {
+  id: number;
+  name: string;
+  isEnd: boolean;
+}
+
+export default class BaseballGameApi {
   static async getAllGames() {
     const result = await fetch(`${BASE_URL}/list`, {
       method: "GET",
@@ -26,15 +39,23 @@ class BaseballGameApi {
     return result.json();
   }
 
-  static async deleteGame(id:number) {
+  static async deleteGame(id: number) {
     const result = await fetch(`${BASE_URL}/${id}`, {
       method: "DELETE",
     });
-    if (result.status === 204) return true; 
+    if (result.status === 204) return true;
     throw new Error("Failed to delete game");
   }
 
-  static async updateGame({id, isEnd, updatedPlayers}: {id:number, isEnd:boolean, updatePlayers: }) {
+  static async updateGame({
+    id,
+    isEnd,
+    updatedPlayers,
+  }: {
+    id: number;
+    isEnd: boolean;
+    updatedPlayers: PlayerDto[];
+  }) {
     const result = await fetch(`${BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
@@ -42,7 +63,7 @@ class BaseballGameApi {
       },
       body: JSON.stringify({ isEnd, updatedPlayers }),
     });
-    if (result.status === 204) return true; 
+    if (result.status === 204) return true;
     throw new Error("Failed to update game");
   }
 }
