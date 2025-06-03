@@ -1,10 +1,13 @@
 import React from "react";
-import BaseballPage from "../components/pages/BaseballPage";
+import BaseballGameApi from "../api/baseballGame";
+import MainPage from "../components/pages/MainPage";
 
 interface Props {}
 
-const Page = ({}: Props) => {
-  return <BaseballPage />;
+const Page = async ({}: Props) => {
+  const games = await BaseballGameApi.getAllGames();
+
+  return <MainPage games={games} />;
 };
 
 export default Page;
