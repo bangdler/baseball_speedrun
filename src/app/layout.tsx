@@ -1,7 +1,7 @@
 import React from "react";
 import LayoutRecoil from "./layout.recoil";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import QueryProvider from "../provider/QueryProvider";
+import "../globals.css";
 
 export const metadata = {
   title: "myfair front pre-course",
