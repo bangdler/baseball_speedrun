@@ -3,6 +3,10 @@ import React from "react";
 import styled from "@emotion/styled";
 import useBaseball from "../../hooks/useBaseball";
 import BaseballPlayerItem from "../organisms/BaseballPlayerItem";
+import BaseballGame from "../../domain/BaseballGame";
+import { BaseballGameDto } from "../../api/baseballGame";
+import BaseballNumber from "../../domain/BaseballNumber";
+import BaseballPlayer from "../../domain/BaseballPlayer";
 
 const Container = styled.div`
   padding: 1rem;
@@ -25,10 +29,28 @@ const PlayerWrapper = styled.div`
   gap: 20px;
 `;
 
-interface Props {}
+interface Props {
+  data: BaseballGameDto;
+}
 
-const BaseballPage = ({}: Props) => {
-  const { game, addPlayer, removePlayer, reset, tryBall } = useBaseball();
+const BaseballPage = ({ data }: Props) => {
+  const defaultGame = new BaseballGame({
+    answer: new BaseballNumber(data.answer.join("")),
+    players: data.players.map(
+      (p) =>
+        new BaseballPlayer({
+          id: p.id,
+          history: p.history,
+          isWinner: p.isWinner,
+        })
+    ),
+    curPlayerIdx: data.curPlayerIdx,
+    status: data.status,
+  });
+  const { game, addPlayer, removePlayer, reset, tryBall } = useBaseball({
+    defaultGame: defaultGame,
+  });
+  
   console.log(game.answer.numbers);
 
   function renderStatus() {

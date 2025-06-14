@@ -1,16 +1,21 @@
+import { GameStatus } from "../domain/BaseballGame";
 import { History } from "../domain/BaseballPlayer";
 
 const BASE_URL = "http://localhost:8080/games";
 
 export interface PlayerDto {
+  id: number;
   isWinner: boolean;
-  history: Omit<History, "id">[];
+  history: History[];
 }
 
 export interface BaseballGameDto {
   id: number;
   name: string;
-  isEnd: boolean;
+  status: GameStatus;
+  players: PlayerDto[];
+  curPlayerIdx: number;
+  answer: number[];
 }
 
 export default class BaseballGameApi {
@@ -32,7 +37,7 @@ export default class BaseballGameApi {
     return result.json();
   }
 
-  static async getGameById(id: number) {
+  static async getGameById(id: number): Promise<BaseballGameDto> {
     const result = await fetch(`${BASE_URL}/${id}`, {
       method: "GET",
     });
@@ -51,17 +56,19 @@ export default class BaseballGameApi {
     id,
     isEnd,
     updatedPlayers,
+    curPlayerIdx,
   }: {
     id: number;
     isEnd: boolean;
     updatedPlayers: PlayerDto[];
+    curPlayerIdx: number;
   }) {
     const result = await fetch(`${BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ isEnd, updatedPlayers }),
+      body: JSON.stringify({ isEnd, updatedPlayers, curPlayerIdx }),
     });
     if (result.status === 204) return true;
     throw new Error("Failed to update game");

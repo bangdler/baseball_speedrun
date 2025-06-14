@@ -2,7 +2,7 @@ import BaseballNumber from "./BaseballNumber";
 import BaseballPlayer from "./BaseballPlayer";
 import RandomBallCreator from "./RandomBallCreator";
 
-type GameStatus = "IDLE" | "PROGRESS" | "END";
+export type GameStatus = "IDLE" | "PROGRESS" | "END";
 interface Props {
   answer: BaseballNumber;
   players: BaseballPlayer[];

@@ -1,7 +1,13 @@
+import { useState } from "react";
+import BaseballGame from "../domain/BaseballGame";
 import { sampleZustandStore } from "../state/ZustandSampleState";
 
-const useBaseball = () => {
-  const { game, setGame } = sampleZustandStore();
+interface Props {
+  defaultGame: BaseballGame;
+}
+
+const useBaseball = ({ defaultGame }: Props) => {
+  const [game, setGame] = useState(defaultGame);
 
   function addPlayer() {
     setGame(game.addPlayer());
