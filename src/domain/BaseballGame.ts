@@ -4,6 +4,7 @@ import RandomBallCreator from "./RandomBallCreator";
 
 export type GameStatus = "IDLE" | "PROGRESS" | "END";
 interface Props {
+  id: number;
   answer: BaseballNumber;
   players: BaseballPlayer[];
   curPlayerIdx: number;
@@ -11,12 +12,14 @@ interface Props {
 }
 
 export default class BaseballGame {
+  id: number;
   answer: BaseballNumber;
   players: BaseballPlayer[];
   curPlayerIdx: number;
   status: GameStatus;
 
-  constructor({ answer, players, curPlayerIdx, status }: Props) {
+  constructor({ id, answer, players, curPlayerIdx, status }: Props) {
+    this.id = id;
     this.answer = answer;
     this.players = players;
     this.curPlayerIdx = curPlayerIdx;
@@ -54,6 +57,7 @@ export default class BaseballGame {
     this.curPlayerIdx = this.turnNext();
 
     return new BaseballGame({
+      id: this.id,
       answer: this.answer,
       players: this.players,
       curPlayerIdx: this.curPlayerIdx,
@@ -71,6 +75,7 @@ export default class BaseballGame {
 
   reset() {
     return new BaseballGame({
+      id: this.id,
       answer: new BaseballNumber(
         RandomBallCreator.createRandomBalls().join("")
       ),

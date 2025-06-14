@@ -54,12 +54,12 @@ export default class BaseballGameApi {
 
   static async updateGame({
     id,
-    isEnd,
+    status,
     updatedPlayers,
     curPlayerIdx,
   }: {
     id: number;
-    isEnd: boolean;
+    status: GameStatus;
     updatedPlayers: PlayerDto[];
     curPlayerIdx: number;
   }) {
@@ -68,7 +68,7 @@ export default class BaseballGameApi {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ isEnd, updatedPlayers, curPlayerIdx }),
+      body: JSON.stringify({ status, updatedPlayers, curPlayerIdx }),
     });
     if (result.status === 204) return true;
     throw new Error("Failed to update game");

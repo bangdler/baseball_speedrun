@@ -17,10 +17,7 @@ const Page = async ({ params }: Props) => {
     return <div>잘못된 접근입니다.</div>;
   }
 
-  const data = await BaseballGameApi.getGameById(idNum);
-
-
-  return <BaseballPage data={data} />;
+  return <BaseballPage id={idNum} />;
 };
 
 export default Page;
