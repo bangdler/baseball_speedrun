@@ -14,7 +14,7 @@ export interface BaseballGameDto {
 }
 
 export default class BaseballGameApi {
-  static async getAllGames() {
+  static async getAllGames(): Promise<BaseballGameDto[]> {
     const result = await fetch(`${BASE_URL}/list`, {
       method: "GET",
     });
