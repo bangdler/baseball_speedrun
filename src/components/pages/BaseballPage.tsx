@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import useBaseball from "../../hooks/useBaseball";
 import BaseballPlayerItem from "../organisms/BaseballPlayerItem";
 import BaseballGame from "../../domain/BaseballGame";
@@ -14,32 +14,35 @@ interface Props {
 }
 
 const BaseballPage = ({ id }: Props) => {
-  const { data, refetch } = useFetchBaseballGame(id);
+  const { data, refetch, isLoading } = useFetchBaseballGame(id);
 
-  const defaultGame = new BaseballGame({
-    id: data?.id ?? new Date().getTime(),
-    answer: new BaseballNumber(
-      data?.answer.join("") ?? RandomBallCreator.createRandomBalls().join("")
-    ),
-    players:
-      data?.players.map(
+  const defaultGame = useMemo(() => {
+    if (!data) return null;
+
+    return new BaseballGame({
+      id: data.id,
+      answer: new BaseballNumber(data.answer.join("")),
+      players: data.players.map(
         (p) =>
           new BaseballPlayer({
             id: p.id,
             history: p.history,
             isWinner: p.isWinner,
           })
-      ) ?? [],
-    curPlayerIdx: data?.curPlayerIdx ?? 0,
-    status: data?.status ?? "IDLE",
-  });
+      ),
+      curPlayerIdx: data.curPlayerIdx,
+      status: data.status,
+    });
+  }, [data]);
+
   const { game, addPlayer, removePlayer, reset, tryBall } = useBaseball({
     defaultGame: defaultGame,
   });
 
-  console.log(game.answer.numbers);
+  console.log(game?.answer.numbers);
 
   function renderStatus() {
+    if (!game) return;
     switch (game.status) {
       case "IDLE":
         return "게임 시작";
@@ -54,6 +57,7 @@ const BaseballPage = ({ id }: Props) => {
   }
 
   async function saveGame() {
+    if (!game) return;
     try {
       await BaseballGameApi.updateGame({
         id: game.id,
@@ -67,6 +71,10 @@ const BaseballPage = ({ id }: Props) => {
     } catch (error) {
       console.error("에러 발생:", error);
     }
+  }
+
+  if (isLoading || !game) {
+    return <div>loading...</div>;
   }
 
   return (

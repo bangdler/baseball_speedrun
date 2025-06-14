@@ -58,7 +58,7 @@ const MainPage = ({}: Props) => {
                     : "종료"}
               </span>
               <span className={"text-sm font-semibold"}>
-                {game.curPlayerIdx} 번째 플레이어 차례
+                {game.curPlayerIdx + 1} 번째 플레이어 차례
               </span>
             </Link>
             <button
