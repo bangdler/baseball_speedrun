@@ -14,30 +14,30 @@ interface Props {
 }
 
 const BaseballPage = ({ id }: Props) => {
-  const { data, refetch, isLoading } = useFetchBaseballGame(id);
+  const { data: game, refetch, isLoading } = useFetchBaseballGame(id);
 
-  const defaultGame = useMemo(() => {
-    if (!data) return null;
+  // const defaultGame = useMemo(() => {
+  //   if (!data) return null;
 
-    return new BaseballGame({
-      id: data.id,
-      answer: new BaseballNumber(data.answer.join("")),
-      players: data.players.map(
-        (p) =>
-          new BaseballPlayer({
-            id: p.id,
-            history: p.history,
-            isWinner: p.isWinner,
-          })
-      ),
-      curPlayerIdx: data.curPlayerIdx,
-      status: data.status,
-    });
-  }, [data]);
+  //   return new BaseballGame({
+  //     id: data.id,
+  //     answer: new BaseballNumber(data.answer.join("")),
+  //     players: data.players.map(
+  //       (p) =>
+  //         new BaseballPlayer({
+  //           id: p.id,
+  //           history: p.history,
+  //           isWinner: p.isWinner,
+  //         })
+  //     ),
+  //     curPlayerIdx: data.curPlayerIdx,
+  //     status: data.status,
+  //   });
+  // }, [data]);
 
-  const { game, reset, tryBall } = useBaseball({
-    defaultGame: defaultGame,
-  });
+  // const { game, reset, tryBall } = useBaseball({
+  //   defaultGame: defaultGame,
+  // });
 
   async function handleClickAddPlayerButton() {
     try {
@@ -57,7 +57,7 @@ const BaseballPage = ({ id }: Props) => {
     }
   }
 
-  console.log(game?.answer.numbers);
+  console.log(game?.answer);
 
   function renderStatus() {
     if (!game) return;
@@ -111,7 +111,7 @@ const BaseballPage = ({ id }: Props) => {
         </button>
         <button
           disabled={game.status !== "END"}
-          onClick={reset}
+          // onClick={reset}
           className={`px-4 py-2 rounded text-white ${
             game.status !== "END"
               ? "bg-gray-400 cursor-not-allowed"
@@ -149,11 +149,12 @@ const BaseballPage = ({ id }: Props) => {
             </div>
 
             <BaseballPlayerItem
+              gameId={game.id}
               myIdx={idx}
               curPlayerIdx={game.curPlayerIdx}
               player={player}
-              onSubmit={tryBall}
               isEnd={game.status === "END"}
+              refetch={refetch}
             />
           </div>
         ))}

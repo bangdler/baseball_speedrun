@@ -2,6 +2,7 @@ import { GameStatus } from "../domain/BaseballGame";
 import { BaseballGameCreateRequest } from "./dto/BaseballGameCreateRequest";
 import { BaseballGameResponse } from "./dto/BaseballGameResponse";
 import { BaseballGameResponses } from "./dto/BaseballGameResponses";
+import { BaseballGameTryBallRequest } from "./dto/BaseballGameTryBallRequest";
 import { PlayerResponse } from "./dto/PlayerResponse";
 
 const BASE_URL = "http://localhost:8080/games";
@@ -80,5 +81,22 @@ export default class BaseballGameApi {
       method: "DELETE",
     });
     return result;
+  }
+
+  static async tryBall({
+    id,
+    request,
+  }: {
+    id: number;
+    request: BaseballGameTryBallRequest;
+  }) {
+    const result = await fetch(`${BASE_URL}/${id}/try-ball`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+    return result.json();
   }
 }

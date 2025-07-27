@@ -1,42 +1,52 @@
 import BaseballPlayer, { History } from "../../domain/BaseballPlayer";
 import { FormEventHandler, useState } from "react";
 import { BASEBALL_NUMBER_COUNT } from "../../domain/BaseballNumber";
+import { PlayerResponse } from "../../api/dto/PlayerResponse";
+import BaseballGameApi from "../../api/baseballGame";
 
 interface Props {
+  gameId: number;
   myIdx: number;
   curPlayerIdx: number;
-  player: BaseballPlayer;
-  onSubmit: (input: string) => void;
+  player: PlayerResponse;
   isEnd: boolean;
+  refetch: () => void;
 }
 
 const BaseballPlayerItem = ({
+  gameId,
   myIdx,
   curPlayerIdx,
   player,
-  onSubmit,
   isEnd,
+  refetch,
 }: Props) => {
   const isMyTurn = myIdx === curPlayerIdx;
 
   const [errMsg, setErrMsg] = useState<string | null>(null);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
     const input = data.get("input") as string;
-    console.log(input);
+
+    if (e.currentTarget) {
+      e.currentTarget.reset();
+    }
+
     try {
-      onSubmit(input);
+      await BaseballGameApi.tryBall({
+        id: gameId,
+        request: { playerId: player.id, input: input },
+      });
       setErrMsg(null);
+      refetch();
     } catch (e: unknown) {
       if (e instanceof Error) {
         setErrMsg(e.message);
       }
     }
-
-    e.currentTarget.reset();
   };
 
   const renderResult = () => {
@@ -92,7 +102,7 @@ const BaseballPlayerItem = ({
       <ul className="space-y-1 text-sm text-gray-800">
         {player.history.map((h) => (
           <li key={h.id} className="bg-white rounded px-3 py-1 shadow-sm">
-            {renderHistory(h)}
+            {h.input}: {renderHistory(h)}
           </li>
         ))}
       </ul>
