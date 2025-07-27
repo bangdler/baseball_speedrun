@@ -26,7 +26,7 @@ const BaseballGameCreateModal = ({
 
   const onSubmit = async (data: FormData) => {
     try {
-      await BaseballGameApi.createGame(data.name);
+      await BaseballGameApi.createGame({ name: data.name });
       actionAfterSubmit();
       onClose();
     } catch (error) {

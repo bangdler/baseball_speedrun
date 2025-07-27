@@ -1,43 +1,31 @@
 import { GameStatus } from "../domain/BaseballGame";
-import { History } from "../domain/BaseballPlayer";
+import { BaseballGameCreateRequest } from "./dto/BaseballGameCreateRequest";
+import { BaseballGameResponse } from "./dto/BaseballGameResponse";
+import { BaseballGameResponses } from "./dto/BaseballGameResponses";
+import { PlayerResponse } from "./dto/PlayerResponse";
 
 const BASE_URL = "http://localhost:8080/games";
 
-export interface PlayerDto {
-  id: number;
-  isWinner: boolean;
-  history: History[];
-}
-
-export interface BaseballGameDto {
-  id: number;
-  name: string;
-  status: GameStatus;
-  players: PlayerDto[];
-  curPlayerIdx: number;
-  answer: number[];
-}
-
 export default class BaseballGameApi {
-  static async getAllGames(): Promise<BaseballGameDto[]> {
+  static async getAllGames(): Promise<BaseballGameResponses> {
     const result = await fetch(`${BASE_URL}/list`, {
       method: "GET",
     });
     return result.json();
   }
 
-  static async createGame(name: string) {
+  static async createGame(request: BaseballGameCreateRequest) {
     const result = await fetch(`${BASE_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify(request),
     });
     return result.json();
   }
 
-  static async getGameById(id: number): Promise<BaseballGameDto> {
+  static async getGameById(id: number): Promise<BaseballGameResponse> {
     const result = await fetch(`${BASE_URL}/${id}`, {
       method: "GET",
     });
@@ -60,7 +48,7 @@ export default class BaseballGameApi {
   }: {
     id: number;
     status: GameStatus;
-    updatedPlayers: PlayerDto[];
+    updatedPlayers: PlayerResponse[];
     curPlayerIdx: number;
   }) {
     const result = await fetch(`${BASE_URL}/${id}`, {

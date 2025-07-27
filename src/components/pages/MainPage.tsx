@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import BaseballGameApi, { BaseballGameDto } from "../../api/baseballGame";
+import BaseballGameApi from "../../api/baseballGame";
 import useFetchAllBaseballGames from "../../hooks/useFetchAllBaseballGames";
 import BaseballGameCreateModal from "../organisms/BaseballGameCreateModal";
 import Link from "next/link";
@@ -35,7 +35,7 @@ const MainPage = ({}: Props) => {
         </button>
       </div>
       <div className={"flex gap-4"}>
-        {games?.map((game) => (
+        {games?.baseballGameResponses.map((game) => (
           <div
             key={game.id}
             className="flex items-center gap-4 border border-blue-200 p-4 rounded shadow-sm"
