@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import useBaseball from "../../hooks/useBaseball";
 import BaseballPlayerItem from "../organisms/BaseballPlayerItem";
 import BaseballGame from "../../domain/BaseballGame";
-import BaseballGameApi, { BaseballGameDto } from "../../api/baseballGame";
+import BaseballGameApi from "../../api/baseballGame";
 import BaseballNumber from "../../domain/BaseballNumber";
 import BaseballPlayer from "../../domain/BaseballPlayer";
 import useFetchBaseballGame from "../../hooks/useFetchBaseballGame";
@@ -35,9 +35,27 @@ const BaseballPage = ({ id }: Props) => {
     });
   }, [data]);
 
-  const { game, addPlayer, removePlayer, reset, tryBall } = useBaseball({
+  const { game, reset, tryBall } = useBaseball({
     defaultGame: defaultGame,
   });
+
+  async function handleClickAddPlayerButton() {
+    try {
+      await BaseballGameApi.addPlayer({ id });
+      refetch();
+    } catch (e: unknown) {
+      console.error(e);
+    }
+  }
+
+  async function handleClickDeletePlayerButton(playerId: number) {
+    try {
+      await BaseballGameApi.removePlayer({ id, playerId });
+      refetch();
+    } catch (e: unknown) {
+      console.error(e);
+    }
+  }
 
   console.log(game?.answer.numbers);
 
@@ -86,7 +104,7 @@ const BaseballPage = ({ id }: Props) => {
 
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={addPlayer}
+          onClick={handleClickAddPlayerButton}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
         >
           사용자 추가
@@ -123,7 +141,7 @@ const BaseballPage = ({ id }: Props) => {
                 플레이어 {idx + 1}
               </span>
               <button
-                onClick={() => removePlayer(player.id)}
+                onClick={() => handleClickDeletePlayerButton(player.id)}
                 className="text-sm text-red-500 hover:underline"
               >
                 사용자 삭제

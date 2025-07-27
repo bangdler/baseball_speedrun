@@ -61,4 +61,24 @@ export default class BaseballGameApi {
     if (result.status === 204) return true;
     throw new Error("Failed to update game");
   }
+
+  static async addPlayer({ id }: { id: number }) {
+    const result = await fetch(`${BASE_URL}/${id}/player`, {
+      method: "POST",
+    });
+    return result.json();
+  }
+
+  static async removePlayer({
+    id,
+    playerId,
+  }: {
+    id: number;
+    playerId: number;
+  }) {
+    const result = await fetch(`${BASE_URL}/${id}/player/${playerId}`, {
+      method: "DELETE",
+    });
+    return result;
+  }
 }
