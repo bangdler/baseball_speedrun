@@ -12,7 +12,11 @@ export default class BaseballGameApi {
     const result = await fetch(`${BASE_URL}/list`, {
       method: "GET",
     });
-    return result.json();
+    if (result.ok) {
+      return result.json();
+    }
+    const error = await result.json();
+    throw Error(error?.error.message);
   }
 
   static async createGame(request: BaseballGameCreateRequest) {
@@ -30,7 +34,11 @@ export default class BaseballGameApi {
     const result = await fetch(`${BASE_URL}/${id}`, {
       method: "GET",
     });
-    return result.json();
+    if (result.ok) {
+      return result.json();
+    }
+    const error = await result.json();
+    throw Error(error?.error.message);
   }
 
   static async deleteGame(id: number) {
@@ -97,6 +105,11 @@ export default class BaseballGameApi {
       },
       body: JSON.stringify(request),
     });
-    return result.json();
+
+    if (result.ok) {
+      return result.json();
+    }
+    const error = await result.json();
+    throw Error(error?.error.message);
   }
 }
