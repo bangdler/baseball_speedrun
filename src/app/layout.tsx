@@ -1,5 +1,7 @@
 import React from "react";
 import LayoutRecoil from "./layout.recoil";
+import QueryProvider from "../provider/QueryProvider";
+import "../globals.css";
 
 export const metadata = {
   title: "myfair front pre-course",
@@ -14,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LayoutRecoil>{children}</LayoutRecoil>
+        <QueryProvider>
+          <LayoutRecoil>{children}</LayoutRecoil>
+        </QueryProvider>
       </body>
     </html>
   );
